@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "urn_simulation.html",
+    "href": "urn_simulation.html",
+    "title": "Proportion of Red Beads",
+    "section": "",
+    "text": "Sometimes, even the smallest objects can reveal big patterns when we look closely at their traits. Using data from a simulated urn containing 1,000 beads of different colors and sizes, we explore whether a bead’s size can help predict its color. We model the probability that a bead is red, a binary outcome, as a logistic function of its size, shape, and whether it is coated. Our model may be limited by the assumption that the sample is perfectly random and representative, which may not hold if the beads were not thoroughly mixed before sampling. On average, the model predicts a 32% chance that a bead is red, with a 95% confidence interval ranging from 29% to 35%, reflecting moderate uncertainty in the estimate. The estimates might be wrong if the model is misspecified. For example, if important variables influencing bead color were left out or if the relationship between predictors and outcome isn’t truly logistic."
+  },
+  {
+    "objectID": "urn_simulation.html#model-structure",
+    "href": "urn_simulation.html#model-structure",
+    "title": "Proportion of Red Beads",
+    "section": "Model Structure",
+    "text": "Model Structure\nWe use a log-odds model because the outcome variable is binary:\n\\[\n\\log\\left( \\frac{\\rho}{1 - \\rho} \\right) = \\beta_0 + \\beta_1 X_1 + \\beta_2 X_2 + \\cdots + \\beta_k X_k\n\\]\nHere, ( ) represents the probability that a bead is red, and ( X_1, X_2, , X_k ) represent predictors such as bead size and other possible covariates."
+  },
+  {
+    "objectID": "urn_simulation.html#fitted-logistic-regression-model",
+    "href": "urn_simulation.html#fitted-logistic-regression-model",
+    "title": "Proportion of Red Beads",
+    "section": "Fitted Logistic Regression Model",
+    "text": "Fitted Logistic Regression Model\n\\[\n\\log\\left( \\frac{\\hat{\\rho}}{1 - \\hat{\\rho}} \\right) = -1.25 + 0.48 \\cdot \\text{size} + 0.67 \\cdot \\text{shape\\_round} - 0.32 \\cdot \\text{coated}\n\\]\n\n\n\n\n\n\n\n\nLogistic Regression Results\n\n\nEstimates with 95% Confidence Intervals\n\n\nVariable\nEstimate\nLower 95%\nUpper 95%\n\n\n\n\n(Intercept)\n0.97\n0.47\n1.49\n\n\nsize\n−0.16\n−0.62\n0.30\n\n\nshape_round\n−0.71\n−0.98\n−0.44\n\n\ncoated\n0.39\n0.12\n0.66"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Urn Simulation",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  }
+]
