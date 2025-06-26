@@ -1,15 +1,82 @@
 ---
-title: "Proportion of red beads"
+title: "Proportion of Red Beads"
 author: "Jacob Khaykin"
 format: html
 execute: 
-    echo: false
+  echo: false
 ---
-
 
 ```{r}
 #| message: false
 library(tidyverse)
+library(tidymodels)
+library(broom)
+library(gt)
+
 ```
-Sometimes, even the smallest objects can reveal big patterns when we look closely at their traits. Using data from a simulated urn containing 1,000 beads of different colors and sizes, we explore whether a bead’s size can help predict its color.
-Our model may be limited by the assumption that the sample is perfectly random and representative, which may not hold if the beads were not thoroughly mixed before sampling
+
+Sometimes, even the smallest objects can reveal big patterns when we look closely at their traits. Using data from a simulated urn containing 1,000 beads of different colors and sizes, we explore whether a bead’s size can help predict its color. We model the probability that a bead is red, a binary outcome, as a logistic function of its size, shape, and whether it is coated. Our model may be limited by the assumption that the sample is perfectly random and representative, which may not hold if the beads were not thoroughly mixed before sampling.
+
+## Model Structure
+
+We use a log-odds model because the outcome variable is binary:
+
+$$
+\log\left( \frac{\rho}{1 - \rho} \right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_k X_k
+$$
+
+Here, \( \rho \) represents the probability that a bead is red, and \( X_1, X_2, \ldots, X_k \) represent predictors such as bead size and other possible covariates.
+
+## Fitted Logistic Regression Model
+
+$$
+\log\left( \frac{\hat{\rho}}{1 - \hat{\rho}} \right) = -1.25 + 0.48 \cdot \text{size} + 0.67 \cdot \text{shape\_round} - 0.32 \cdot \text{coated}
+$$
+```{r}
+#| label: simulate-urn-data
+
+set.seed(123)
+
+urn_data <- tibble(
+  size = runif(1000, 0.5, 1.5),
+  shape_round = rbinom(1000, 1, 0.5),
+  coated = rbinom(1000, 1, 0.4)
+) %>%
+  mutate(
+    prob_red = plogis(-1.25 + 0.48 * size + 0.67 * shape_round - 0.32 * coated),
+    color = rbinom(1000, 1, prob_red),
+    color = factor(ifelse(color == 1, "red", "white"))
+  )
+```
+```{r}
+#| cache: true
+
+fit_color <- logistic_reg() %>%
+  set_engine("glm") %>%
+  set_mode("classification") %>%
+  fit(color ~ size + shape_round + coated, data = urn_data)
+```
+```{r}
+#| label: model-results-table
+
+tidy(fit_color, conf.int = TRUE) %>%
+  select(term, estimate, conf.low, conf.high) %>%
+  gt() %>%
+  tab_header(
+    title = "Logistic Regression Results",
+    subtitle = "Estimates with 95% Confidence Intervals"
+  ) %>%
+  fmt_number(
+    columns = c(estimate, conf.low, conf.high),
+    decimals = 2
+  ) %>%
+  cols_label(
+    term = "Variable",
+    estimate = "Estimate",
+    conf.low = "Lower 95%",
+    conf.high = "Upper 95%"
+  )
+```
+
+
+
