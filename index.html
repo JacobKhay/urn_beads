@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Jacob Khaykin">
 
-<title>Urn Simulation</title>
+<title>Proportion of Red Beads – Urn Simulation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -108,21 +138,34 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#model-structure" id="toc-model-structure" class="nav-link active" data-scroll-target="#model-structure">Model Structure</a></li>
+  <li><a href="#fitted-logistic-regression-model" id="toc-fitted-logistic-regression-model" class="nav-link" data-scroll-target="#fitted-logistic-regression-model">Fitted Logistic Regression Model</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Urn Simulation</h1>
+<h1 class="title">Proportion of Red Beads</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jacob Khaykin </p>
+          </div>
+  </div>
     
   
     
@@ -133,10 +176,530 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a Quarto website.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
+<p>Sometimes, even the smallest objects can reveal big patterns when we look closely at their traits. Using data from a simulated urn containing 1,000 beads of different colors and sizes, we explore whether a bead’s size can help predict its color. We model the probability that a bead is red, a binary outcome, as a logistic function of its size, shape, and whether it is coated. Our model may be limited by the assumption that the sample is perfectly random and representative, which may not hold if the beads were not thoroughly mixed before sampling. On average, the model predicts a 32% chance that a bead is red, with a 95% confidence interval ranging from 29% to 35%, reflecting moderate uncertainty in the estimate. The estimates might be wrong if the model is misspecified. For example, if important variables influencing bead color were left out or if the relationship between predictors and outcome isn’t truly logistic.</p>
+<section id="model-structure" class="level2">
+<h2 class="anchored" data-anchor-id="model-structure">Model Structure</h2>
+<p>We use a log-odds model because the outcome variable is binary:</p>
+<p><span class="math display">\[
+\log\left( \frac{\rho}{1 - \rho} \right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_k X_k
+\]</span></p>
+<p>Here, ( ) represents the probability that a bead is red, and ( X_1, X_2, , X_k ) represent predictors such as bead size and other possible covariates.</p>
+</section>
+<section id="fitted-logistic-regression-model" class="level2">
+<h2 class="anchored" data-anchor-id="fitted-logistic-regression-model">Fitted Logistic Regression Model</h2>
+<p><span class="math display">\[
+\log\left( \frac{\hat{\rho}}{1 - \hat{\rho}} \right) = -1.25 + 0.48 \cdot \text{size} + 0.67 \cdot \text{shape\_round} - 0.32 \cdot \text{coated}
+\]</span></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="rtzegrrjep" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rtzegrrjep table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#rtzegrrjep thead, #rtzegrrjep tbody, #rtzegrrjep tfoot, #rtzegrrjep tr, #rtzegrrjep td, #rtzegrrjep th {
+  border-style: none;
+}
+
+#rtzegrrjep p {
+  margin: 0;
+  padding: 0;
+}
+
+#rtzegrrjep .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#rtzegrrjep .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#rtzegrrjep .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#rtzegrrjep .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#rtzegrrjep .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#rtzegrrjep .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#rtzegrrjep .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#rtzegrrjep .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#rtzegrrjep .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#rtzegrrjep .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#rtzegrrjep .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#rtzegrrjep .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#rtzegrrjep .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#rtzegrrjep .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#rtzegrrjep .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rtzegrrjep .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#rtzegrrjep .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#rtzegrrjep .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#rtzegrrjep .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rtzegrrjep .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#rtzegrrjep .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rtzegrrjep .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#rtzegrrjep .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rtzegrrjep .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rtzegrrjep .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rtzegrrjep .gt_left {
+  text-align: left;
+}
+
+#rtzegrrjep .gt_center {
+  text-align: center;
+}
+
+#rtzegrrjep .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#rtzegrrjep .gt_font_normal {
+  font-weight: normal;
+}
+
+#rtzegrrjep .gt_font_bold {
+  font-weight: bold;
+}
+
+#rtzegrrjep .gt_font_italic {
+  font-style: italic;
+}
+
+#rtzegrrjep .gt_super {
+  font-size: 65%;
+}
+
+#rtzegrrjep .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#rtzegrrjep .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#rtzegrrjep .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#rtzegrrjep .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#rtzegrrjep .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#rtzegrrjep .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#rtzegrrjep .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#rtzegrrjep .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#rtzegrrjep div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="4" class="gt_heading gt_title gt_font_normal">Logistic Regression Results</th>
+</tr>
+<tr class="gt_heading even">
+<th colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Estimates with 95% Confidence Intervals</th>
+</tr>
+<tr class="gt_col_headings header">
+<th id="term" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Variable</th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Estimate</th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Lower 95%</th>
+<th id="conf.high" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Upper 95%</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="term">(Intercept)</td>
+<td class="gt_row gt_right" headers="estimate">0.97</td>
+<td class="gt_row gt_right" headers="conf.low">0.47</td>
+<td class="gt_row gt_right" headers="conf.high">1.49</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="term">size</td>
+<td class="gt_row gt_right" headers="estimate">−0.16</td>
+<td class="gt_row gt_right" headers="conf.low">−0.62</td>
+<td class="gt_row gt_right" headers="conf.high">0.30</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="term">shape_round</td>
+<td class="gt_row gt_right" headers="estimate">−0.71</td>
+<td class="gt_row gt_right" headers="conf.low">−0.98</td>
+<td class="gt_row gt_right" headers="conf.high">−0.44</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="term">coated</td>
+<td class="gt_row gt_right" headers="estimate">0.39</td>
+<td class="gt_row gt_right" headers="conf.low">0.12</td>
+<td class="gt_row gt_right" headers="conf.high">0.66</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -211,7 +774,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/JacobKhay\.github\.io\/urn_beads\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
