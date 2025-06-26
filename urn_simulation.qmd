@@ -2,5 +2,13 @@
 title: "Proportion of red beads"
 author: "Jacob Khaykin"
 format: html
+execute: 
+    echo: false
 ---
 
+
+```{r}
+#| message: false
+library(tidyverse)
+```
+Sometimes, even the smallest objects can reveal big patterns when we look closely at their traits. Using data from a simulated urn containing 1,000 beads of different colors and sizes, we explore whether a bead’s size can help predict its color.
