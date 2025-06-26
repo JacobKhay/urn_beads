@@ -12,10 +12,11 @@ library(tidyverse)
 library(tidymodels)
 library(broom)
 library(gt)
+library(marginaleffects)
 
 ```
 
-Sometimes, even the smallest objects can reveal big patterns when we look closely at their traits. Using data from a simulated urn containing 1,000 beads of different colors and sizes, we explore whether a bead’s size can help predict its color. We model the probability that a bead is red, a binary outcome, as a logistic function of its size, shape, and whether it is coated. Our model may be limited by the assumption that the sample is perfectly random and representative, which may not hold if the beads were not thoroughly mixed before sampling.
+Sometimes, even the smallest objects can reveal big patterns when we look closely at their traits. Using data from a simulated urn containing 1,000 beads of different colors and sizes, we explore whether a bead’s size can help predict its color. We model the probability that a bead is red, a binary outcome, as a logistic function of its size, shape, and whether it is coated. Our model may be limited by the assumption that the sample is perfectly random and representative, which may not hold if the beads were not thoroughly mixed before sampling. On average, the model predicts a 32% chance that a bead is red, with a 95% confidence interval ranging from 29% to 35%, reflecting moderate uncertainty in the estimate. The estimates might be wrong if the model is misspecified. For example, if important variables influencing bead color were left out or if the relationship between predictors and outcome isn’t truly logistic.
 
 ## Model Structure
 
@@ -78,5 +79,24 @@ tidy(fit_color, conf.int = TRUE) %>%
   )
 ```
 
+```{r}
+plot_predictions(fit_color, type = "prob", condition = "group") +
+  labs(
+    title = "Predicted Probability of Drawing a Red Bead by Bead Group",
+    subtitle = "Larger and differently shaped beads show higher predicted chances of being red",
+    caption = "Data: Simulated urn of 1,000 beads used for modeling bead color",
+    x = "Bead Group",
+    y = "Predicted Probability of Red"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 13, hjust = 0.5),
+    plot.caption = element_text(size = 10, hjust = 0),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10)
+  )
+
+```
 
 
